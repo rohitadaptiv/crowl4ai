@@ -39,7 +39,11 @@ async def scrape_data():
                 "source_url": site["url"],
                 "raw_content": result.markdown.raw_markdown
             })
+            print(f"   ✨ Fetched {len(result.markdown.raw_markdown)} chars from {site['source']}")
 
+    print("   🛑 Crawler context exiting...")
+    
+    print("   💾 Saving raw data to file...")
     with open(RAW_FILE, "w", encoding="utf-8") as f:
         json.dump(collected_data, f, indent=4, ensure_ascii=False)
     
