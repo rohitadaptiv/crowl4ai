@@ -18,6 +18,7 @@ services:
     environment:
       - OLLAMA_URL=http://ollama:11434/api/chat
       - PYTHONUNBUFFERED=1
+      - MAX_CONTEXT_CHARS=20000 # Increase to 80000 for full data (slower)
     volumes:
       - .:/app
     # Keep container alive to allow manual execution
