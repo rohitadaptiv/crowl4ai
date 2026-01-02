@@ -1,0 +1,32 @@
+{
+    "name": "Bikaner",
+    "location": "Rajasthan, India",
+    "description": "Short summary of Bikaner.",
+    "categories": [
+        "heritage",
+        "culture"
+    ],
+    "rating": 4.5,
+    "emoji": "🏰",
+    "gradient": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+    "badge": "Heritage",
+    "images": [
+        "https://example.com/image1.jpg"
+    ],
+    "details": {
+        "history": "Brief history of Bikaner...",
+        "bestTime": "October to March...",
+        "weather": "Hot summers, cool winters...",
+        "attractions": "Junagarh Fort, Karni Mata Temple...",
+        "forFamily": "Camel rides, museums...",
+        "forCouples": "Heritage stays, sunsets...",
+        "forSolo": "Safe, explorable markets...",
+        "forAdventure": "Camel safari, desert camping...",
+        "forVloggers": "Colorful architecture, festivals...",
+        "culture": "Folk music, arts...",
+        "food": "Bikaneri Bhujia, Rasgulla...",
+        "safety": "Generally safe...",
+        "cost": "Moderate budget...",
+        "crowd": "Moderate during season..."
+    }
+}

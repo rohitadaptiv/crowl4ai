@@ -12,7 +12,7 @@ from process_llm import process_with_llm
 RAW_FILE = "bikaner_raw.json"
 CLEAN_FILE = "bikaner_clean.json"
 FINAL_FILE = "bikaner_final.json"
-TEMPLATE_FILE = "jaipur.json"
+TEMPLATE_FILE = "schema_template.json" # Lightweight schema
 
 
 async def scrape_data():

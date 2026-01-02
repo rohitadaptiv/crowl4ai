@@ -89,27 +89,23 @@ IMPORTANT RULES:
 
 def process_with_llm(input_file: str, output_file: str, template_file: str):
     """
-    Main function to run the LLM processing pipeline.
-    Reads clean data from input_file, template from template_file, writes to output_file.
+    Reads clean data, reads the schema template, and queries Ollama.
     """
-    print(f"🤖 Starting LLM processing: {input_file} -> {output_file}")
-
-    # 1. Read Input Data (Cleaned)
-    try:
-        with open(input_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            # Use full_description for context
-            context_text = data.get("full_description", "")
-            if not context_text: 
-                print("⚠️ Warning: No 'full_description' found in input file.")
-                context_text = json.dumps(data) # Fallback to dumping whole json
-    except FileNotFoundError:
-        print(f"❌ Input file {input_file} not found.")
+    if not os.path.exists(input_file):
+        print(f"❌ Input file not found: {input_file}")
         return False
 
+    if not os.path.exists(template_file):
+        print(f"❌ Template file not found: {template_file}")
+        return False
+        
+    print(f"📖 Reading input data from {input_file}...")
+    with open(input_file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # Use 'full_description' as primary context, fallback to summary
+    context_text = data.get("full_description", "")
     if not context_text:
-        print("❌ No context extracted. Aborting LLM process.")
-        return False
 
     print(f"📖 Context length: {len(context_text)} chars")
 
