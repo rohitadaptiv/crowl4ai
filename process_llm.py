@@ -39,7 +39,7 @@ IMPORTANT RULES:
         "stream": True, # Enable streaming
         "options": {
             "temperature": 0.2, 
-            "num_ctx": 16000 
+            "num_ctx": 40000 
         }
     }
     
