@@ -111,18 +111,6 @@ def process_with_llm(input_file: str, output_file: str, template_file: str):
         context_text = data.get("summary", "")
 
     print(f"📖 Context length: {len(context_text)} chars")
-    
-    # PERFORMANCE OPTIMIZATION: Truncate context for CPU instances
-    # Default is 20000 (approx 4 mins). Set to 80000+ for full processing (15+ mins).
-    max_chars_env = os.getenv("MAX_CONTEXT_CHARS", "20000")
-    try:
-        MAX_CHARS = int(max_chars_env)
-    except ValueError:
-        MAX_CHARS = 20000
-
-    if len(context_text) > MAX_CHARS:
-        print(f"✂️ Truncating context from {len(context_text)} to {MAX_CHARS} chars (MAX_CONTEXT_CHARS)...")
-        context_text = context_text[:MAX_CHARS] + "\n...(truncated)..."
 
     # 2. Read Template
     try:
