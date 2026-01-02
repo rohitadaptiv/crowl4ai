@@ -1,0 +1,121 @@
+import json
+import requests
+import re
+import time
+import os
+
+# Configuration
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/chat")
+MODEL = "llama3.1"
+
+def query_ollama(prompt, context_text):
+    """Sends a request to local Ollama instance."""
+    payload = {
+        "model": MODEL,
+        "messages": [
+            {
+                "role": "system", 
+                "content": "You are a helpful data extraction assistant. Your task is to extract travel information about Bikaner from the provided text and format it into a specific JSON structure. Do NOT invent information. If information is missing, output null or a generic sensible description based on the context."
+            },
+            {
+                "role": "user",
+                "content": f"""
+Please generate a valid JSON object for "Bikaner" (Rajasthan, India) based on the text provided below.
+The output JSON MUST have the EXACT same structure and fields as this example (for Jaipur):
+
+{prompt}
+
+TEXT TO EXTRACT FROM:
+{context_text}
+
+IMPORTANT RULES:
+1. Output ONLY valid JSON. No markdown formatting (like ```json), no explanations.
+2. Ensure all fields from the example are present.
+3. For "images", use placeholder URLs or extract if available in text.
+4. "details" object must have all the keys: history, bestTime, weather, attractions, forFamily, forCouples, forSolo, forAdventure, forVloggers, culture, food, safety, cost, crowd.
+"""
+            }
+        ],
+        "stream": False,
+        "options": {
+            "temperature": 0.2, 
+            "num_ctx": 16000 
+        }
+    }
+    
+    try:
+        print("⏳ Sending request to Ollama (this may take a minute)...")
+        response = requests.post(OLLAMA_URL, json=payload)
+        response.raise_for_status()
+        return response.json()["message"]["content"]
+    except requests.exceptions.ConnectionError:
+        print("❌ Could not connect to Ollama. Is it running?")
+        print("Try running: ollama serve")
+        return None
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        return None
+
+def process_with_llm(input_file: str, output_file: str, template_file: str):
+    """
+    Main function to run the LLM processing pipeline.
+    Reads clean data from input_file, template from template_file, writes to output_file.
+    """
+    print(f"🤖 Starting LLM processing: {input_file} -> {output_file}")
+
+    # 1. Read Input Data (Cleaned)
+    try:
+        with open(input_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            # Use full_description for context
+            context_text = data.get("full_description", "")
+            if not context_text: 
+                print("⚠️ Warning: No 'full_description' found in input file.")
+                context_text = json.dumps(data) # Fallback to dumping whole json
+    except FileNotFoundError:
+        print(f"❌ Input file {input_file} not found.")
+        return False
+
+    if not context_text:
+        print("❌ No context extracted. Aborting LLM process.")
+        return False
+
+    print(f"📖 Context length: {len(context_text)} chars")
+
+    # 2. Read Template
+    try:
+        with open(template_file, "r") as f:
+            template_data = json.load(f)
+            template_str = json.dumps(template_data, indent=2)
+    except FileNotFoundError:
+        print(f"❌ Template file {template_file} not found.")
+        return False
+
+    # 3. Process with LLM
+    json_output_str = query_ollama(template_str, context_text)
+
+    if json_output_str:
+        # 4. Validate and Save
+        try:
+            # Clean up potential markdown formatting
+            json_output_str = re.sub(r"^```json", "", json_output_str.strip())
+            json_output_str = re.sub(r"^```", "", json_output_str.strip())
+            json_output_str = re.sub(r"```$", "", json_output_str.strip())
+            
+            final_data = json.loads(json_output_str)
+            
+            with open(output_file, "w", encoding="utf-8") as f:
+                json.dump(final_data, f, indent=4, ensure_ascii=False)
+            print(f"✅ LLM formatted data saved successfully to {output_file}")
+            return True
+            
+        except json.JSONDecodeError:
+            print("❌ Failed to parse LLM output as JSON.")
+            print("Raw Output snippet:", json_output_str[:500])
+            return False
+    else:
+        return False
+
+if __name__ == "__main__":
+    # Allow running directly for testing
+    process_with_llm("bikaner_clean.json", "bikaner_final.json", "jaipur.json")

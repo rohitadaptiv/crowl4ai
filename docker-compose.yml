@@ -1,0 +1,24 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: bikaner_ollama
+    # No ports exposed to host to avoid conflicts. 
+    # Accessible internally at http://ollama:11434
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: always
+
+  scraper_app:
+    build: .
+    container_name: bikaner_scraper
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_URL=http://ollama:11434/api/chat
+    volumes:
+      - .:/app
+    # Keep container alive to allow manual execution
+    command: tail -f /dev/null
+
+volumes:
+  ollama_data:
