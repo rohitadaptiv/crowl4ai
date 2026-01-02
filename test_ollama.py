@@ -19,8 +19,8 @@ def test_connection():
     }
     
     try:
-        print("⏳ Sending test request (Timeout: 30s)...")
-        with requests.post(OLLAMA_URL, json=payload, stream=True, timeout=30) as response:
+        print("⏳ Sending test request (Timeout: 60s)...")
+        with requests.post(OLLAMA_URL, json=payload, stream=True, timeout=60) as response:
             if response.status_code == 200:
                 print("✅ Connection Established! Streaming response:")
                 print("------------------------------------------------")
