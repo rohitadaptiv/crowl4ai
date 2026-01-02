@@ -13,8 +13,11 @@ services:
     container_name: bikaner_scraper
     depends_on:
       - ollama
+    # Fix for Chrome/Playwright hanging in Docker
+    shm_size: '2gb'
     environment:
       - OLLAMA_URL=http://ollama:11434/api/chat
+      - PYTHONUNBUFFERED=1
     volumes:
       - .:/app
     # Keep container alive to allow manual execution
