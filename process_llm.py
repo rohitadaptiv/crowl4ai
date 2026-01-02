@@ -9,7 +9,7 @@ OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/chat")
 MODEL = "llama3.1"
 
 def query_ollama(prompt, context_text):
-    """Sends a request to local Ollama instance."""
+    """Sends a request to local Ollama instance with streaming enabled."""
     payload = {
         "model": MODEL,
         "messages": [
@@ -36,7 +36,7 @@ IMPORTANT RULES:
 """
             }
         ],
-        "stream": False,
+        "stream": True, # Enable streaming
         "options": {
             "temperature": 0.2, 
             "num_ctx": 16000 
@@ -44,16 +44,42 @@ IMPORTANT RULES:
     }
     
     try:
-        print("⏳ Sending request to Ollama (this may take a minute)...")
-        response = requests.post(OLLAMA_URL, json=payload)
-        response.raise_for_status()
-        return response.json()["message"]["content"]
+        print("⏳ Sending request to Ollama... (Response will stream below)")
+        # Use stream=True in requests
+        with requests.post(OLLAMA_URL, json=payload, stream=True) as response:
+            response.raise_for_status()
+            
+            full_response = ""
+            print("🤖 LLM Output: ", end="", flush=True)
+
+            for line in response.iter_lines():
+                if line:
+                    decoded_line = line.decode('utf-8')
+                    try:
+                        json_chunk = json.loads(decoded_line)
+                        # Ollama chat endpoint structure: {"model":..., "message":{"role":"assistant", "content":"..."}, "done":false}
+                        content = json_chunk.get("message", {}).get("content", "")
+                        
+                        # Print to console immediately
+                        print(content, end="", flush=True)
+                        
+                        # Accumulate full text for processing
+                        full_response += content
+                        
+                        if json_chunk.get("done", False):
+                            print("\n✅ Generation Complete.")
+                            
+                    except json.JSONDecodeError:
+                        pass
+            
+            return full_response
+
     except requests.exceptions.ConnectionError:
-        print("❌ Could not connect to Ollama. Is it running?")
+        print("\n❌ Could not connect to Ollama. Is it running?")
         print("Try running: ollama serve")
         return None
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"\n❌ Error: {e}")
         return None
 
 def process_with_llm(input_file: str, output_file: str, template_file: str):
