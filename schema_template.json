@@ -1,32 +1,32 @@
 {
-    "name": "Bikaner",
-    "location": "Rajasthan, India",
-    "description": "Short summary of Bikaner.",
+    "name": "Destination Name",
+    "location": "State, Country",
+    "description": "Short summary of the destination.",
     "categories": [
-        "heritage",
-        "culture"
+        "category1",
+        "category2"
     ],
     "rating": 4.5,
     "emoji": "🏰",
-    "gradient": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-    "badge": "Heritage",
+    "gradient": "linear-gradient(135deg, #color1 0%, #color2 100%)",
+    "badge": "Tag",
     "images": [
         "https://example.com/image1.jpg"
     ],
     "details": {
-        "history": "Brief history of Bikaner...",
-        "bestTime": "October to March...",
-        "weather": "Hot summers, cool winters...",
-        "attractions": "Junagarh Fort, Karni Mata Temple...",
-        "forFamily": "Camel rides, museums...",
-        "forCouples": "Heritage stays, sunsets...",
-        "forSolo": "Safe, explorable markets...",
-        "forAdventure": "Camel safari, desert camping...",
-        "forVloggers": "Colorful architecture, festivals...",
-        "culture": "Folk music, arts...",
-        "food": "Bikaneri Bhujia, Rasgulla...",
-        "safety": "Generally safe...",
-        "cost": "Moderate budget...",
-        "crowd": "Moderate during season..."
+        "history": "Brief history of the place...",
+        "bestTime": "Best months to visit...",
+        "weather": "Overview of seasons and climate...",
+        "attractions": "List of key tourist spots...",
+        "forFamily": "Activities for families...",
+        "forCouples": "Romantic spots and activities...",
+        "forSolo": "Safety and solo activities...",
+        "forAdventure": "Adventure sports and trekking...",
+        "forVloggers": "Photogenic spots and culture...",
+        "culture": "Art, music, festivals...",
+        "food": "Famous local dishes...",
+        "safety": "Safety tips...",
+        "cost": "Budget overview...",
+        "crowd": "Crowd levels during seasons..."
     }
 }
