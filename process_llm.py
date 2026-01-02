@@ -106,6 +106,7 @@ def process_with_llm(input_file: str, output_file: str, template_file: str):
     # Use 'full_description' as primary context, fallback to summary
     context_text = data.get("full_description", "")
     if not context_text:
+        context_text = data.get("summary", "")
 
     print(f"📖 Context length: {len(context_text)} chars")
 
