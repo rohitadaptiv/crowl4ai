@@ -133,13 +133,22 @@ def clean_data_pipeline(input_file: str, output_file: str):
     if not final_description:
         print("⚠️ Warning: No description content extracted.")
     
+    # Stats Calculation
+    char_count = len(final_description)
+    token_est = int(char_count / 4)
+    print(f"   📊 Stats: {char_count:,} characters ≈ {token_est:,} tokens estimate.")
+
     final_output = {
         "destination": "Bikaner",
         "state": "Rajasthan",
         "summary": generate_summary(final_description),
         "full_description": final_description,
         "attractions": final_attractions,
-        "sources": sources_used
+        "sources": sources_used,
+        "stats": {
+            "char_count": char_count,
+            "token_estimate": token_est
+        }
     }
     
     with open(output_file, "w", encoding="utf-8") as f:
