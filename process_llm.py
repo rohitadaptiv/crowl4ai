@@ -15,14 +15,15 @@ def query_ollama(prompt, context_text):
         "messages": [
             {
                 "role": "system", 
-                "content": "You are a helpful data extraction assistant. Your task is to extract travel information about Bikaner from the provided text and format it into a specific JSON structure. Do NOT invent information. If information is missing, output null or a generic sensible description based on the context."
+                "content": "You are a helpful data extraction assistant. Your task is to extract travel information from the provided text and format it into a specific JSON structure. Do NOT invent information. If information is missing, output null or a generic sensible description based on the context."
             },
             {
                 "role": "user",
                 "content": f"""
-Please generate a valid JSON object for "Bikaner" (Rajasthan, India) based on the text provided below.
-The output JSON MUST have the EXACT same structure and fields as this example (for Jaipur):
+Please generate a valid JSON object for the Destination described in the text below.
+The output JSON MUST follow the EXACT structure and keys shown in the EXAMPLE SCHEMA below:
 
+EXAMPLE SCHEMA:
 {prompt}
 
 TEXT TO EXTRACT FROM:
@@ -30,9 +31,10 @@ TEXT TO EXTRACT FROM:
 
 IMPORTANT RULES:
 1. Output ONLY valid JSON. No markdown formatting (like ```json), no explanations.
-2. Ensure all fields from the example are present.
-3. For "images", use placeholder URLs or extract if available in text.
-4. "details" object must have all the keys: history, bestTime, weather, attractions, forFamily, forCouples, forSolo, forAdventure, forVloggers, culture, food, safety, cost, crowd.
+2. Ensure all fields from the schema are present.
+3. Extract the "name" of the destination from the text itself.
+4. For "images", use placeholder URLs or extract if available in text.
+5. "details" object must have all the keys shown in the schema.
 """
             }
         ],
@@ -146,4 +148,4 @@ def process_with_llm(input_file: str, output_file: str, template_file: str):
 
 if __name__ == "__main__":
     # Allow running directly for testing
-    process_with_llm("bikaner_clean.json", "bikaner_final.json", "jaipur.json")
+    process_with_llm("bikaner_clean.json", "bikaner_final.json", "schema_template.json")
