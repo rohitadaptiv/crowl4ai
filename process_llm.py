@@ -43,6 +43,11 @@ IMPORTANT RULES:
         }
     }
     
+    # Calculate Total Input Stats
+    total_input_char = len(prompt) + len(context_text) + 500 # +500 for system instructions approx
+    total_input_token = int(total_input_char / 4)
+    print(f"   📊 Total LLM Input: {total_input_char:,} chars ≈ {total_input_token:,} tokens.")
+    
     try:
         print("⏳ Sending request to Ollama... (Response will stream below)")
         # Use stream=True in requests
