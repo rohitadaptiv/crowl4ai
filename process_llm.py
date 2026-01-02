@@ -6,7 +6,7 @@ import os
 
 # Configuration
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/chat")
-MODEL = "llama3.2"
+MODEL = "llama3.1"
 
 def query_ollama(prompt, context_text):
     """Sends a request to local Ollama instance with streaming enabled."""
